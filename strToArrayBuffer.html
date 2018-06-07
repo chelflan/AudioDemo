@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+		<script>
+			let audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+			var str = 'zhangqingzhangqinzhangqingsdfghUSHJSJDJKJUJNBVCDRTYUIKMNBVFTYUILKMNBVFGJKLvchjklkjhgfBNMKJHGBWKLDLMCJKDKFLLKGKGzhangqingsdfghUSHJSJDJKJUJNBVCDRTYUIKMNBVFTYUILKMNBVFGJKLvchjklkjhgfBNMKJHGBWKLDLMCJKDKFLLKGKGzhangqingsdfghUSHJSJDJKJUJNBVCDRTYUIKMNBVFTYUILKMNBVFGJKLvchjklkjhgfBNMKJHGBWKLDLMCJKDKFLLKGKGzhangqingsdfghUSHJSJDJKJUJNBVCDRTYUIKMNBVFTYUILKMNBVFGJKLvchjklkjhgfBNMKJHGBWKLDLMCJKDKFLLKGKGzhangqingsdfghUSHJSJDJKJUJNBVCDRTYUIKMNBVFTYUILKMNBVFGJKLvchjklkjhgfBNMKJHGBWKLDLMCJKDKFLLKGKGzhangqingsdfghUSHJSJDJKJUJNBVCDRTYUIKMNBVFTYUILKMNBVFGJKLvchjklkjhgfBNMKJHGBWKLDLMCJKDKFLLKGKGzhangqingsdfghUSHJSJDJKJUJNBVCDRTYUIKMNBVFTYUILKMNBVFGJKLvchjklkjhgfBNMKJHGBWKLDLMCJKDKFLLKGKGzhangqingsdfghUSHJSJDJKJUJNBVCDRTYUIKMNBVFTYUILKMNBVFGJKLvchjklkjhgfBNMKJHGBWKLDLMCJKDKFLLKGKGzhangqingsdfghUSHJSJDJKJUJNBVCDRTYUIKMNBVFTYUILKMNBVFGJKLvchjklkjhgfBNMKJHGBWKLDLMCJKDKFLLKGKGgsdfghUSHJSJDJKJUJNBVCDRTYUIKMNBVFTYUILKMNBVFGJKLvchjklkjhgfBNMKJHGBWKLDLMCJKDKFLLKGKGsdfghU'
+			+'SHJSJDJKJUJNBVCDRTYUIKMNBVFTYUILKMNBVFGJKLvchjklkjhgfBNMKJHGBWKLDLMCJKDKFLLKGKG';
+
+			function str2ab(str) {
+				var buf = new ArrayBuffer(str.length * 2); // 每个字符占用2个字节
+				console.debug(buf);
+				var bufView = new Float32Array(buf);
+				for(var i = 0, strLen = str.length; i < strLen; i++) {
+					bufView[i] = str.charCodeAt(i);
+				}
+				return bufView;
+			}
+			var aarr = str2ab(str);
+			var audioChuncks = [];
+			audioChuncks.push(aarr);
+			myplay();
+
+			function myplay() {
+				//创建播放音频对象
+				let myBuffer = audioCtx.createBuffer(1, 2048, audioCtx.sampleRate),
+					source = audioCtx.createBufferSource(),
+					recorder = audioCtx.createScriptProcessor(2048, 1, 1);
+				source.connect(recorder);
+				recorder.connect(audioCtx.destination);
+				recorder.onaudioprocess = function(ev) {
+					//播放audioChuncks里面真正的二进制数据
+					ev.outputBuffer.copyToChannel(audioChuncks.shift() || new Float32Array(2048), 0, 0);
+				};
+			}
+		</script>
+	</body>
+
+</html>
